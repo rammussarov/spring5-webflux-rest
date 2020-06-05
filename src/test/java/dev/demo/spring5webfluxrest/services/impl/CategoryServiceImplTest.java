@@ -7,7 +7,6 @@ import dev.demo.spring5webfluxrest.repositories.CategoryRepository;
 import dev.demo.spring5webfluxrest.services.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import reactor.core.publisher.Flux;
