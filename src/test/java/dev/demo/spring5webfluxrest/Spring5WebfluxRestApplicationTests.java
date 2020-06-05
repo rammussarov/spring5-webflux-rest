@@ -1,4 +1,4 @@
-package dev.springframework.spring5webfluxrest;
+package dev.demo.spring5webfluxrest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

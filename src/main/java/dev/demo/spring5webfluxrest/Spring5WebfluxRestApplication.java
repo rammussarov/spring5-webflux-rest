@@ -1,4 +1,4 @@
-package dev.springframework.spring5webfluxrest;
+package dev.demo.spring5webfluxrest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
