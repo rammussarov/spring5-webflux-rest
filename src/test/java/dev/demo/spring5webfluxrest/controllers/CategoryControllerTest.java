@@ -1,5 +1,6 @@
 package dev.demo.spring5webfluxrest.controllers;
 
+import dev.demo.spring5webfluxrest.commands.CategoryCommand;
 import dev.demo.spring5webfluxrest.domain.Category;
 import dev.demo.spring5webfluxrest.services.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,8 +34,8 @@ class CategoryControllerTest {
     @Test
     void getCategories() {
         given(categoryService.findAll()).willReturn(Flux.just(
-                Category.builder().description("cat1").build(),
-                Category.builder().description("cat2").build()
+                CategoryCommand.builder().description("cat1").build(),
+                CategoryCommand.builder().description("cat2").build()
         ));
 
         webTestClient
@@ -47,7 +48,7 @@ class CategoryControllerTest {
     @Test
     void findById() {
         given(categoryService.findById(anyString()))
-                .willReturn(Mono.just(Category.builder().description("cat1").build()));
+                .willReturn(Mono.just(CategoryCommand.builder().description("cat1").build()));
 
         webTestClient.get().uri("/api/v1/categories/abc")
                 .exchange()

@@ -1,6 +1,6 @@
 package dev.demo.spring5webfluxrest.controllers;
 
-import dev.demo.spring5webfluxrest.domain.Category;
+import dev.demo.spring5webfluxrest.commands.CategoryCommand;
 import dev.demo.spring5webfluxrest.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,12 +15,12 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping("/api/v1/categories")
-    Flux<Category> getCategories() {
+    Flux<CategoryCommand> getCategories() {
         return categoryService.findAll();
     }
 
     @GetMapping("/api/v1/categories/{id}")
-    Mono<Category> findById(@PathVariable String id) {
+    Mono<CategoryCommand> findById(@PathVariable String id) {
         return categoryService.findById(id);
     }
 }

@@ -1,7 +1,10 @@
 package dev.demo.spring5webfluxrest.services.impl;
 
+import dev.demo.spring5webfluxrest.commands.CategoryCommand;
+import dev.demo.spring5webfluxrest.coverters.CategoryToCategoryCommandConverter;
 import dev.demo.spring5webfluxrest.domain.Category;
 import dev.demo.spring5webfluxrest.repositories.CategoryRepository;
+import dev.demo.spring5webfluxrest.services.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,12 +22,15 @@ class CategoryServiceImplTest {
     @Mock
     private CategoryRepository categoryRepository;
 
-    @InjectMocks
-    private CategoryServiceImpl categoryService;
+    private CategoryToCategoryCommandConverter converter;
+
+    private CategoryService categoryService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
+        converter = new CategoryToCategoryCommandConverter();
+        categoryService = new CategoryServiceImpl(categoryRepository, converter);
     }
 
     @Test
@@ -34,7 +40,7 @@ class CategoryServiceImplTest {
                 Category.builder().description("cat2").build()
         ));
 
-        Flux<Category> all = categoryService.findAll();
+        Flux<CategoryCommand> all = categoryService.findAll();
         assertEquals(2, all.count().block());
     }
 
@@ -45,7 +51,7 @@ class CategoryServiceImplTest {
                 Category.builder().id(testId).description("cat1").build()
         ));
 
-        Mono<Category> categoryMono = categoryService.findById(testId);
+        Mono<CategoryCommand> categoryMono = categoryService.findById(testId);
         assertEquals(testId, categoryMono.block().getId());
     }
 }
