@@ -3,9 +3,8 @@ package dev.demo.spring5webfluxrest.controllers;
 import dev.demo.spring5webfluxrest.commands.CategoryCommand;
 import dev.demo.spring5webfluxrest.services.CategoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -22,5 +21,16 @@ public class CategoryController {
     @GetMapping("/api/v1/categories/{id}")
     Mono<CategoryCommand> findById(@PathVariable String id) {
         return categoryService.findById(id);
+    }
+
+    @PostMapping("/api/v1/categories")
+    @ResponseStatus(HttpStatus.CREATED)
+    Mono<Void> save(@RequestBody CategoryCommand categoryCommand) {
+        return categoryService.save(categoryCommand);
+    }
+
+    @PutMapping("/api/v1/categories/{id}")
+    Mono<CategoryCommand> update(@PathVariable String id, @RequestBody CategoryCommand categoryCommand) {
+        return categoryService.update(id, categoryCommand);
     }
 }

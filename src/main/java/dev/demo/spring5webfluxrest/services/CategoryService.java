@@ -8,4 +8,8 @@ public interface CategoryService {
     Flux<CategoryCommand> findAll();
 
     Mono<CategoryCommand> findById(String id);
+
+    Mono<Void> save(CategoryCommand command);
+
+    Mono<CategoryCommand> update(String id, CategoryCommand categoryCommand);
 }
