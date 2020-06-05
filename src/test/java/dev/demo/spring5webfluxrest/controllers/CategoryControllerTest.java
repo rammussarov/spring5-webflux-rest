@@ -1,7 +1,6 @@
 package dev.demo.spring5webfluxrest.controllers;
 
 import dev.demo.spring5webfluxrest.commands.CategoryCommand;
-import dev.demo.spring5webfluxrest.domain.Category;
 import dev.demo.spring5webfluxrest.services.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +40,7 @@ class CategoryControllerTest {
         webTestClient
                 .get().uri("/api/v1/categories")
                 .exchange()
-                .expectBodyList(Category.class)
+                .expectBodyList(CategoryCommand.class)
                 .hasSize(2);
     }
 
@@ -52,6 +51,6 @@ class CategoryControllerTest {
 
         webTestClient.get().uri("/api/v1/categories/abc")
                 .exchange()
-                .expectBody(Category.class);
+                .expectBody(CategoryCommand.class);
     }
 }
