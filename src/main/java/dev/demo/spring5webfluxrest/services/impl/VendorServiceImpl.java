@@ -53,7 +53,7 @@ public class VendorServiceImpl implements VendorService {
 
         Mono<Vendor> vendorMono = vendorRepository.findById(id);
         final Vendor savedVendor = vendorMono.block();
-        if (savedVendor != null) {
+        if (savedVendor != null && hasChangesForPatch(savedVendor, vendorCommand)) {
             if (!vendorCommand.getFirstName().equals(savedVendor.getFirstName())) {
                 savedVendor.setFirstName(vendorCommand.getFirstName());
             }
@@ -63,5 +63,11 @@ public class VendorServiceImpl implements VendorService {
             vendorMono = vendorRepository.save(savedVendor);
         }
         return vendorMono.map(converter::convert);
+    }
+
+    private boolean hasChangesForPatch(Vendor vendor, VendorCommand vendorCommand) {
+        boolean firstNameChanged = !vendor.getFirstName().equals(vendorCommand.getFirstName());
+        boolean lastNameChanged = !vendor.getLastName().equals(vendorCommand.getLastName());
+        return firstNameChanged && lastNameChanged;
     }
 }
