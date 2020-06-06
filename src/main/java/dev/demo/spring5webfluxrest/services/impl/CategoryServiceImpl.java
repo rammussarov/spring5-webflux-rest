@@ -7,7 +7,6 @@ import dev.demo.spring5webfluxrest.domain.Category;
 import dev.demo.spring5webfluxrest.repositories.CategoryRepository;
 import dev.demo.spring5webfluxrest.services.CategoryService;
 import lombok.RequiredArgsConstructor;
-import org.reactivestreams.Publisher;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -32,16 +31,36 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Mono<Void> save(CategoryCommand command) {
+        if (command == null) return Mono.empty();
+
         final Category convert = backConverter.convert(command);
         return categoryRepository.save(convert).then();
     }
 
     @Override
     public Mono<CategoryCommand> update(String id, CategoryCommand categoryCommand) {
+        if (categoryCommand == null) return Mono.empty();
+
         categoryCommand.setId(id);
         final Category convert = backConverter.convert(categoryCommand);
         final Mono<Category> savedCategory = categoryRepository.save(convert);
         return savedCategory.map(converter::convert);
+    }
+
+    @Override
+    public Mono<CategoryCommand> patch(String id, CategoryCommand categoryCommand) {
+        if (categoryCommand == null) return Mono.empty();
+
+        Mono<Category> categoryMono = categoryRepository.findById(id);
+
+        final Category category = categoryMono.block();
+
+        if (category != null && categoryCommand.getDescription() != null) {
+            category.setDescription(categoryCommand.getDescription());
+            categoryMono = categoryRepository.save(category);
+        }
+
+        return categoryMono.map(converter::convert);
     }
 
 }

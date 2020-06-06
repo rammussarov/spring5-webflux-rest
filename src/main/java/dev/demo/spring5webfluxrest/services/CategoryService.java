@@ -12,4 +12,6 @@ public interface CategoryService {
     Mono<Void> save(CategoryCommand command);
 
     Mono<CategoryCommand> update(String id, CategoryCommand categoryCommand);
+
+    Mono<CategoryCommand> patch(String id, CategoryCommand categoryCommand);
 }

@@ -85,4 +85,20 @@ class CategoryControllerTest {
                 .exchange()
                 .expectStatus().isOk();
     }
+
+    @Test
+    void patch() {
+        final CategoryCommand categoryCommand = CategoryCommand.builder().description("test desc").build();
+        final String id = "testId";
+        final CategoryCommand savedCategory = CategoryCommand.builder().id(id).description("new desc").build();
+
+        given(categoryService.patch(id, categoryCommand)).willReturn(Mono.just(savedCategory));
+
+        webTestClient
+                .patch()
+                .uri("/api/v1/categories/testId")
+                .body(Mono.just(categoryCommand), CategoryCommand.class)
+                .exchange()
+                .expectStatus().isOk();
+    }
 }

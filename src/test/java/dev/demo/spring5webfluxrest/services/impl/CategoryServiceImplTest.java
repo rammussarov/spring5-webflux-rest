@@ -39,7 +39,7 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    void findAll() {
+    void findAllTest() {
         when(categoryRepository.findAll()).thenReturn(Flux.just(
                 Category.builder().description("cat1").build(),
                 Category.builder().description("cat2").build()
@@ -50,7 +50,7 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    void findById() {
+    void findByIdTest() {
         final String testId = "id1";
         when(categoryRepository.findById(anyString())).thenReturn(Mono.just(
                 Category.builder().id(testId).description("cat1").build()
@@ -61,7 +61,7 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    void save() {
+    void saveTest() {
         final CategoryCommand categoryCommand = CategoryCommand.builder()
                 .description("test")
                 .build();
@@ -84,7 +84,7 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    void update() {
+    void updateTest() {
         final String id = "testId";
         final String description = "test123";
 
@@ -104,5 +104,38 @@ class CategoryServiceImplTest {
 
         verify(categoryRepository, times(1)).save(any(Category.class));
         assertEquals(description, updatedValue.block().getDescription());
+    }
+
+    @Test
+    void patchTest() {
+        final String id = "testId";
+        final String description = "test";
+        final String newDescription = "test123";
+
+        final CategoryCommand categoryCommand = CategoryCommand.builder().id(id).description(description).build();
+        final Category category = Category.builder().id(id).description(description).build();
+        final Category updatedCategory = Category.builder().id(id).description(newDescription).build();
+
+        given(categoryRepository.findById(anyString())).willReturn(Mono.just(category));
+        given(categoryRepository.save(any(Category.class))).willReturn(Mono.just(updatedCategory));
+
+        Mono<CategoryCommand> saved = categoryService.patch(id, categoryCommand);
+
+        verify(categoryRepository, times(1)).save(any(Category.class));
+        assertEquals(updatedCategory.getDescription(), saved.block().getDescription());
+    }
+
+    @Test
+    void patchSaveNotCalledTest() {
+        final String id = "testId";
+        final String description = "test";
+
+        final CategoryCommand categoryCommand = CategoryCommand.builder().id(id).description(description).build();
+
+        given(categoryRepository.findById(anyString())).willReturn(Mono.empty());
+
+        categoryService.patch(id, categoryCommand);
+
+        verify(categoryRepository, never()).save(any(Category.class));
     }
 }
