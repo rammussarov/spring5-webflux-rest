@@ -7,3 +7,14 @@ workflows:
   maven_test:
     jobs:
       - maven/test # checkout, build, test, and upload test results
+
+      build:
+        steps:
+          - run: mvn integration-test cobertura:cobertura
+
+          - store_test_results:
+              path: target/surefire-reports
+
+          - run:
+              name: Send to CodeCov
+              command: bash <(curl -s https://codecov.io/bash)
