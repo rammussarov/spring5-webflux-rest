@@ -12,4 +12,6 @@ public interface VendorService {
     Mono<Void> save(VendorCommand vendorCommand);
 
     Mono<VendorCommand> update(String id, VendorCommand vendorCommand);
+
+    Mono<VendorCommand> patch(String id, VendorCommand vendorCommand);
 }

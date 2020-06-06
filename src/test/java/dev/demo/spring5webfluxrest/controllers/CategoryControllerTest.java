@@ -33,7 +33,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void getCategories() {
+    void getCategoriesTest() {
         given(categoryService.findAll()).willReturn(Flux.just(
                 CategoryCommand.builder().description("cat1").build(),
                 CategoryCommand.builder().description("cat2").build()
@@ -47,7 +47,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void findById() {
+    void findByIdTest() {
         given(categoryService.findById(anyString()))
                 .willReturn(Mono.just(CategoryCommand.builder().description("cat1").build()));
 
@@ -57,7 +57,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void save() {
+    void saveTest() {
         CategoryCommand categoryCommand = CategoryCommand.builder().description("test desc").build();
         given(categoryService.save(any(CategoryCommand.class)))
                 .willReturn(Mono.empty());
@@ -71,7 +71,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void update() {
+    void updateTest() {
         final CategoryCommand categoryCommand = CategoryCommand.builder().description("test desc").build();
         final String id = "testId";
         final CategoryCommand savedCategory = CategoryCommand.builder().id(id).description("new desc").build();
@@ -87,7 +87,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void patch() {
+    void patchTest() {
         final CategoryCommand categoryCommand = CategoryCommand.builder().description("test desc").build();
         final String id = "testId";
         final CategoryCommand savedCategory = CategoryCommand.builder().id(id).description("new desc").build();

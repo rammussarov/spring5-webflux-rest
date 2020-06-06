@@ -33,7 +33,7 @@ class VendorControllerTest {
     }
 
     @Test
-    void getCategories() {
+    void getCategoriesTest() {
         when(vendorService.findAll())
                 .thenReturn(Flux.just(
                         VendorCommand.builder().id("id1").firstName("name1").build(),
@@ -49,7 +49,7 @@ class VendorControllerTest {
     }
 
     @Test
-    void findById() {
+    void findByIdTest() {
         given(vendorService.findById(anyString()))
                 .willReturn(Mono.just(
                         VendorCommand.builder().id("id1").lastName("last name").build()
@@ -62,7 +62,7 @@ class VendorControllerTest {
     }
 
     @Test
-    void save() {
+    void saveTest() {
         VendorCommand vendorCommand = VendorCommand.builder().firstName("first").lastName("last").build();
 
         given(vendorService.save(any(VendorCommand.class))).willReturn(Mono.empty());
@@ -76,7 +76,7 @@ class VendorControllerTest {
     }
 
     @Test
-    void update() {
+    void updateTest() {
         final String id = "id";
         final String firstName = "first";
         final String lastName = "last";
@@ -88,6 +88,25 @@ class VendorControllerTest {
 
         webTestClient
                 .put()
+                .uri("/api/v1/vendors/id1")
+                .body(Mono.just(vendorCommand), VendorCommand.class)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void patchTest() {
+        final String id = "id";
+        final String firstName = "first";
+        final String lastName = "last";
+
+        final VendorCommand vendorCommand = VendorCommand.builder().firstName(firstName).lastName(lastName).build();
+        final VendorCommand savedCommand = VendorCommand.builder().id(id).firstName(firstName).lastName(lastName).build();
+
+        given(vendorService.update(id, vendorCommand)).willReturn(Mono.just(savedCommand));
+
+        webTestClient
+                .patch()
                 .uri("/api/v1/vendors/id1")
                 .body(Mono.just(vendorCommand), VendorCommand.class)
                 .exchange()

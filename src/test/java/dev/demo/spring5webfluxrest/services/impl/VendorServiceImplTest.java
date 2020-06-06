@@ -39,7 +39,7 @@ class VendorServiceImplTest {
     }
 
     @Test
-    void findAll() {
+    void findAllTest() {
         when(vendorRepository.findAll())
                 .thenReturn(Flux.just(
                         Vendor.builder().firstName("vendor1").build(),
@@ -52,7 +52,7 @@ class VendorServiceImplTest {
     }
 
     @Test
-    void findById() {
+    void findByIdTest() {
         final String testId = "id1";
 
         when(vendorRepository.findById(anyString())).thenReturn(Mono.just(Vendor.builder().id(testId).firstName("vendor1").build()));
@@ -62,7 +62,7 @@ class VendorServiceImplTest {
     }
 
     @Test
-    void save() {
+    void saveTest() {
         final String firstName = "test1";
         final String lastName = "test2";
         final String id = "testId";
@@ -82,7 +82,7 @@ class VendorServiceImplTest {
     }
 
     @Test
-    void update() {
+    void updateTest() {
         final String id = "testId";
         final String firstName = "test1";
         final String lastName = "test2";
@@ -96,5 +96,42 @@ class VendorServiceImplTest {
 
         verify(vendorRepository, times(1)).save(any(Vendor.class));
         assertEquals(id, updatedValue.block().getId());
+    }
+
+    @Test
+    void patchTest() {
+        final String id = "testId";
+        final String firstName = "test1";
+        final String lastName = "test2";
+        final String newFirstName = "First";
+        final String newLastName = "Last";
+
+        final VendorCommand vendorCommand = VendorCommand.builder().firstName(firstName).lastName(lastName).build();
+        final Vendor vendor = Vendor.builder().id(id).firstName(firstName).lastName(lastName).build();
+        final Vendor updatedVendor = Vendor.builder().firstName(newFirstName).lastName(newLastName).build();
+
+        given(vendorRepository.findById(anyString())).willReturn(Mono.just(vendor));
+        given(vendorRepository.save(any(Vendor.class))).willReturn(Mono.just(updatedVendor));
+
+        final Mono<VendorCommand> updatedValue = vendorService.patch(id, vendorCommand);
+
+        verify(vendorRepository, times(1)).save(any(Vendor.class));
+        assertEquals(updatedVendor.getFirstName(), updatedValue.block().getFirstName());
+        assertEquals(updatedVendor.getLastName(), updatedValue.block().getLastName());
+    }
+
+    @Test
+    void patchSaveNotCalledTest() {
+        final String id = "testId";
+        final String firstName = "test1";
+        final String lastName = "test2";
+
+        final VendorCommand vendorCommand = VendorCommand.builder().firstName(firstName).lastName(lastName).build();
+
+        given(vendorRepository.findById(anyString())).willReturn(Mono.empty());
+
+        vendorService.patch(id, vendorCommand);
+
+        verify(vendorRepository, never()).save(any(Vendor.class));
     }
 }

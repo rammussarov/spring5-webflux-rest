@@ -34,4 +34,9 @@ public class VendorController {
     Mono<VendorCommand> update(@PathVariable String id, @RequestBody VendorCommand vendorCommand) {
         return vendorService.update(id, vendorCommand);
     }
+
+    @PatchMapping("/api/v1/vendors/{id}")
+    Mono<VendorCommand> patch(@PathVariable String id, @RequestBody VendorCommand vendorCommand) {
+        return vendorService.update(id, vendorCommand);
+    }
 }

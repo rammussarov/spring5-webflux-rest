@@ -31,15 +31,37 @@ public class VendorServiceImpl implements VendorService {
 
     @Override
     public Mono<Void> save(VendorCommand vendorCommand) {
+        if (vendorCommand == null) return Mono.empty();
+
         final Vendor convert = backConverter.convert(vendorCommand);
         return vendorRepository.save(convert).then();
     }
 
     @Override
     public Mono<VendorCommand> update(String id, VendorCommand vendorCommand) {
+        if (vendorCommand == null) return Mono.empty();
+
         vendorCommand.setId(id);
         final Vendor convert = backConverter.convert(vendorCommand);
         final Mono<Vendor> savedValue = vendorRepository.save(convert);
         return savedValue.map(converter::convert);
+    }
+
+    @Override
+    public Mono<VendorCommand> patch(String id, VendorCommand vendorCommand) {
+        if (vendorCommand == null) return Mono.empty();
+
+        Mono<Vendor> vendorMono = vendorRepository.findById(id);
+        final Vendor savedVendor = vendorMono.block();
+        if (savedVendor != null) {
+            if (vendorCommand.getFirstName() != null) {
+                savedVendor.setFirstName(vendorCommand.getFirstName());
+            }
+            if (vendorCommand.getLastName() != null) {
+                savedVendor.setLastName(vendorCommand.getLastName());
+            }
+            vendorMono = vendorRepository.save(savedVendor);
+        }
+        return vendorMono.map(converter::convert);
     }
 }
