@@ -54,10 +54,10 @@ public class VendorServiceImpl implements VendorService {
         Mono<Vendor> vendorMono = vendorRepository.findById(id);
         final Vendor savedVendor = vendorMono.block();
         if (savedVendor != null) {
-            if (vendorCommand.getFirstName() != null) {
+            if (!vendorCommand.getFirstName().equals(savedVendor.getFirstName())) {
                 savedVendor.setFirstName(vendorCommand.getFirstName());
             }
-            if (vendorCommand.getLastName() != null) {
+            if (!vendorCommand.getLastName().equals(savedVendor.getLastName())) {
                 savedVendor.setLastName(vendorCommand.getLastName());
             }
             vendorMono = vendorRepository.save(savedVendor);

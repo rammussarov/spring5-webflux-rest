@@ -55,7 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         final Category category = categoryMono.block();
 
-        if (category != null && categoryCommand.getDescription() != null) {
+        if (category != null && !categoryCommand.getDescription().equals(category.getDescription())) {
             category.setDescription(categoryCommand.getDescription());
             categoryMono = categoryRepository.save(category);
         }

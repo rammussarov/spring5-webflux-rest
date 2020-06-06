@@ -112,7 +112,7 @@ class CategoryServiceImplTest {
         final String description = "test";
         final String newDescription = "test123";
 
-        final CategoryCommand categoryCommand = CategoryCommand.builder().id(id).description(description).build();
+        final CategoryCommand categoryCommand = CategoryCommand.builder().id(id).description(newDescription).build();
         final Category category = Category.builder().id(id).description(description).build();
         final Category updatedCategory = Category.builder().id(id).description(newDescription).build();
 

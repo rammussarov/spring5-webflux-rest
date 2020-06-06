@@ -106,7 +106,7 @@ class VendorServiceImplTest {
         final String newFirstName = "First";
         final String newLastName = "Last";
 
-        final VendorCommand vendorCommand = VendorCommand.builder().firstName(firstName).lastName(lastName).build();
+        final VendorCommand vendorCommand = VendorCommand.builder().firstName(newFirstName).lastName(newLastName).build();
         final Vendor vendor = Vendor.builder().id(id).firstName(firstName).lastName(lastName).build();
         final Vendor updatedVendor = Vendor.builder().firstName(newFirstName).lastName(newLastName).build();
 
