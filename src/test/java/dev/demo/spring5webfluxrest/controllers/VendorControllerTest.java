@@ -11,6 +11,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
@@ -58,5 +59,38 @@ class VendorControllerTest {
                 .uri("/api/v1/vendors/id1")
                 .exchange()
                 .expectBody(VendorCommand.class);
+    }
+
+    @Test
+    void save() {
+        VendorCommand vendorCommand = VendorCommand.builder().firstName("first").lastName("last").build();
+
+        given(vendorService.save(any(VendorCommand.class))).willReturn(Mono.empty());
+
+        webTestClient
+                .post()
+                .uri("/api/v1/vendors")
+                .body(Mono.just(vendorCommand), VendorCommand.class)
+                .exchange()
+                .expectStatus().isCreated();
+    }
+
+    @Test
+    void update() {
+        final String id = "id";
+        final String firstName = "first";
+        final String lastName = "last";
+
+        final VendorCommand vendorCommand = VendorCommand.builder().firstName(firstName).lastName(lastName).build();
+        final VendorCommand savedCommand = VendorCommand.builder().id(id).firstName(firstName).lastName(lastName).build();
+
+        given(vendorService.update(id, vendorCommand)).willReturn(Mono.just(savedCommand));
+
+        webTestClient
+                .put()
+                .uri("/api/v1/vendors/id1")
+                .body(Mono.just(vendorCommand), VendorCommand.class)
+                .exchange()
+                .expectStatus().isOk();
     }
 }

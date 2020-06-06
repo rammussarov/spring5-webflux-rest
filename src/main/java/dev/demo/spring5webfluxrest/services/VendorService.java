@@ -8,4 +8,8 @@ public interface VendorService {
     Flux<VendorCommand> findAll();
 
     Mono<VendorCommand> findById(String id);
+
+    Mono<Void> save(VendorCommand vendorCommand);
+
+    Mono<VendorCommand> update(String id, VendorCommand vendorCommand);
 }
